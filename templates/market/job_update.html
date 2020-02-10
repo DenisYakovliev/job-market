@@ -8,9 +8,9 @@
 {% block content %}
     <section class="container py-5">
         <div class="shadow p-5">
-            <h3 class="section-title text-uppercase pb-5 text-center">Создание Вакансии</h3>
+            <h3 class="section-title text-uppercase pb-5 text-center">Редактирование вакансии</h3>
 
-            <form action="{% url 'job_create_url' %}" method="post" enctype="multipart/form-data">
+            <form action="{{ job.get_update_url }}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 {% for field in form %}
@@ -27,7 +27,7 @@
                     </div>
                 {% endfor %}
                 <div class="text-center pt-4">
-                    <button type="submit" class="btn btn-info px-3" style="font-size: 18px">Выложить</button>
+                    <button type="submit" class="btn btn-info px-3" style="font-size: 18px">Сохранить</button>
                 </div>
             </form>
         </div>

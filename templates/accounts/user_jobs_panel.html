@@ -51,7 +51,7 @@
                                             {% if job.filled %}
                                                 <a href="" class="btn btn-outline-success my-1">Нанято</a><br>
                                             {% endif %}
-                                            <a href="#" class="btn btn-outline-info my-1">&#9998; Редактировать</a>
+                                            <a href="{{ job.get_update_url }}" class="btn btn-outline-info my-1">&#9998; Редактировать</a>
                                             <br>
                                             <a href="#" class="btn btn-outline-danger my-1">&#10006; Удалить</a>
                                         </td>

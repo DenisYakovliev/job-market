@@ -8,7 +8,7 @@
 {% block content %}
     <section class="container py-5">
         <div class="shadow p-5">
-            <h3 class="header section-title text-uppercase pb-5 text-center text-dark">Профиль <span class="text-info pl-2" style="font-weight: 600;">{{ user.get_full_name }}</span></h3>
+            <h3 class="block-title section-title text-uppercase pb-5 text-center text-dark">Профиль <span class="text-info pl-2" style="font-weight: 600;">{{ user.get_full_name }}</span></h3>
             {% if user.role == 'employee'%}
                 <h5 class="pt-3" style="font-weight: 600;">Имя:</h5>
                 <p class="pb-3 pt-1">{{ user.first_name }}</p>

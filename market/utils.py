@@ -64,14 +64,18 @@ class ObjectUpdateMixin:
 
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     @method_decorator(user_is_employer)
-    def get(self, request, id):
-        obj = self.model.objects.get(id=id)
-        bound_form = self.model_form(instance=obj)
-        context = {'form': bound_form, self.model.__name__.lower(): obj}
-        return render(request, self.template, context=context)
+    def get(self, request, job_id):
+        obj = self.model.objects.get(id=job_id)
 
-    def post(self, request, id):
-        obj = self.model.objects.get(id=id)
+        if request.user.id == obj.user.id or request.user.role == 'admin':
+            bound_form = self.model_form(instance=obj)
+            context = {'form': bound_form, self.model.__name__.lower(): obj}
+            return render(request, self.template, context=context)
+        else:
+            raise PermissionDenied
+
+    def post(self, request, job_id):
+        obj = self.model.objects.get(id=job_id)
         bound_form = self.model_form(request.POST, instance=obj)
 
         if bound_form.is_valid():

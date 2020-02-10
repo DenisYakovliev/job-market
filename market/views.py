@@ -81,7 +81,6 @@ class JobCreate(ObjectCreateMixin, View):
 
 
 class JobUpdate(ObjectUpdateMixin, View):
-    # login_url = 'login_url'
     model = Job
     template = 'market/job_update.html'
     model_form = JobForm
