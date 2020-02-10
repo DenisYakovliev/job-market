@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.core.exceptions import PermissionDenied
 from django.views.generic import View, UpdateView
 from django.contrib.auth.views import LogoutView, LoginView, FormView
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+
 from .models import User
 from .forms import *
 from market.utils import *
@@ -101,7 +101,30 @@ class ProfileJobsPanelView(View):
     @method_decorator(user_is_employer)
     def get(self, request):
         jobs = Job.objects.filter(user_id=self.request.user.id)
-        return render(request, self.template, context={"jobs": jobs})
+
+        paginator = Paginator(jobs, 10)
+        page_number = request.GET.get('page', 1)
+        page = paginator.get_page(page_number)
+        is_paginated = page.has_other_pages()
+
+        if page.has_previous():
+            prev_url = '?page={}'.format(page.previous_page_number())
+        else:
+            prev_url = ''
+
+        if page.has_next():
+            next_url = '?page={}'.format(page.next_page_number())
+        else:
+            next_url = ''
+
+        context = {
+            'page_object': page,
+            'is_paginated': is_paginated,
+            'prev_url': prev_url,
+            'next_url': next_url,
+        }
+
+        return render(request, self.template, context=context)
 
     def post(self, request):
         pass

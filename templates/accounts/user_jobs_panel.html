@@ -13,7 +13,8 @@
                 <h4 class="text-muted">Все созданные вакансии <span class="text-uppercase text-info">{{ request.user.get_full_name }}</span></h4>
             </div>
         </div>
-        <div class="container">
+
+        <div class="container pb-5">
             <div class="row">
                 <div class="col-lg-12 text-right py-5 my-2">
                     <a href="{% url 'job_create_url' %}" class="btn btn-info"><span class='mr-3' style="font-weight: 300; ">&#10010;</span>Добавить вакансию</a>
@@ -32,7 +33,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                {% for job in jobs %}
+                                {% for job in page_object %}
                                     <tr>
                                         <th><a href="{% url 'job_detail_url' job.id %}">{{ job.title }}</a></th>
                                         <td>
@@ -64,5 +65,30 @@
                 </div>
             </div>
         </div>
+
+     {% if is_paginated %}
+        <nav aria-label="Page navigation example" class="mb-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                    <a class="page-link" href="{{ prev_url }}" tabindex="-1">Previous</a>
+                </li>
+                {% for n in page_object.paginator.page_range %}
+                    {% if page_object.number == n %}
+                        <li class="page-item active">
+                            <a href="?page={{ n }}" class="page-link">{{ n }} <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% elif n > page_object.number|add:-3 and n < page_object.number|add:3 %}
+                        <li class="page-item">
+                            <a href="?page={{ n }}" class="page-link ">{{ n }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item {% if not next_url %} disabled {% endif %}">
+                    <a class="page-link" href="{{ next_url }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+
     </section>
 {% endblock %}
