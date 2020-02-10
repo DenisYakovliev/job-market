@@ -8,6 +8,8 @@ from django.core.paginator import Paginator
 from .models import User
 from .forms import *
 from market.utils import *
+from market.models import *
+from market.forms import *
 
 
 class EmployeeRegisterView(View):
@@ -87,8 +89,8 @@ class ProfileDetailView(View):
     template = 'accounts/user_detail.html'
 
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
-    def get(self, request, id):
-        obj = get_object_or_404(self.model, id=id)
+    def get(self, request):
+        obj = get_object_or_404(self.model, id=request.user.id)
         if obj.role == 'admin' and not request.user.role == 'admin':
             raise PermissionDenied
         return render(request, self.template, context={'user': obj})
@@ -125,7 +127,3 @@ class ProfileJobsPanelView(View):
         }
 
         return render(request, self.template, context=context)
-
-    def post(self, request):
-        pass
-

@@ -48,14 +48,12 @@
                                             <a href="" class="btn btn-success">{{ job.applicants.count }} <span class="pl-2">Заявок</span></a>
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-outline-info my-1">Редактировать</a>
-                                            <br>
                                             {% if job.filled %}
                                                 <a href="" class="btn btn-outline-success my-1">Нанято</a><br>
-                                            {% else %}
-                                                <a href="" class="btn btn-outline-info my-1">Отметить "Нанятой"</a><br>
                                             {% endif %}
-                                            <a href="#" class="btn btn-outline-danger my-1">Удалить</a>
+                                            <a href="#" class="btn btn-outline-info my-1">&#9998; Редактировать</a>
+                                            <br>
+                                            <a href="#" class="btn btn-outline-danger my-1">&#10006; Удалить</a>
                                         </td>
                                     </tr>
                                 {% endfor %}

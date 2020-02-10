@@ -84,8 +84,9 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                             {% if request.user.role == 'employer' %}
-                                <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='px-2' style="font-weight: 300; ">&#10010;</span></a>
+                                <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='pl-1' style="font-weight: 100; ">&#10010;</span></a>
                                 <a href="{% url 'profile_jobs_panel_url' %}" class="dropdown-item">Панель вакансий</a>
+                                <a href="{% url 'profile_jobs_panel_url' %}" class="dropdown-item">Заявки на работу</a>
 
                             {% elif request.user.role == 'employee'%}
                                 <a href="" class="dropdown-item">Мои вакансии</a>
@@ -96,8 +97,7 @@
                                 <a href="" class="dropdown-item">База вакансий</a>
                             {% endif %}
 
-                            <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Профиль</a>
-                            <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Изменить профиль</a>
+                            <a href="{% url 'profile_detail_url' %}" class="dropdown-item">Профиль</a>
                             <a href="{% url 'logout_url' %}" class="dropdown-item">Выход</a>
                         </div>
                     </div>
