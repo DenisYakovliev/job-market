@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Job-Market
+{% endblock %}
+
+{% block content %}
+    <section class="home-search" style="background: #fafafa;">
+        <div class="container mx-auto pt-5 pb-4">
+            <h5 class="heading text-center text-uppercase pb-4" style="font-weight: 600;">
+                Найди <span class="text-warning">работу</span>, которую ты <span class="text-warning">полюбишь</span>.
+            </h5>
+            <form id="job-main-form" method="get" action="{% url 'jobs_list_url' %}">
+                <div class="d-flex">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="profession">Вакансия</label>
+                            <input type="text" id="profession" name="job_query"
+                                   placeholder="Вакансия для поиска" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="location">Адрес</label>
+                            <input type="text" id="location" name="location_query"
+                                   placeholder="Адрес вакансии" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2 align-self-end mb-3">
+                        <button type="submit" class="btn btn-warning"> Найти </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="py-4">
+        <div class="container">
+            <h2 class="block-title text-uppercase text-center py-4" style="letter-spacing: 1px; word-spacing: 3px;">Найдено вакансий: <span class="text-warning" style="font-weight: 800;">{{ jobs_found }}</span></h2>
+            <div class="jobs-list pb-3">
+                {% for job in page_object.object_list %}
+                    <div class="job shadow rounded my-5" style="width: 100%;">
+                        <div class="mx-auto py-4" style="width: 90%">
+                            <div class="types text-uppercase" style="letter-spacing: -0.5px;">
+                                <p>
+                                    {% if job.type == '1' %}
+                                        <span class="badge featured-badge badge-success py-2 px-3" style="font-weight: 300;">Full time</span>
+                                    {% elif job.type == '2' %}
+                                        <span class="badge featured-badge badge-primary py-2 px-3" style="font-weight: 300;">Part time</span>
+                                    {% else %}
+                                        <span style="color: #ffffff; font-weight: 300;" class="badge featured-badge badge-warning py-2 px-3">Internship</span>
+                                    {% endif %}
+                                    <span class="badge featured-badge badge-secondary py-2 px-3" style="font-weight: 300;">{{ job.get_category_display }}</span>
+                                </p>
+                            </div>
+                            <h3><a href="{{ job.get_absolute_url }}" class="text-body">{{ job.title }}</a></h3>
+                            <p class="text-dark">
+                                Зарплата:<span class="pl-2 pr-3" style="font-weight: 700;">{{ job.salary }}&#8372;</span>
+                                Компания:<span class="pl-2" style="font-weight: 700;">{{ job.user.company_name }}</span>
+                            </p>
+                            <p>{{ job.description|truncatechars:200 }}</p>
+                            <div class="d-flex justify-content-between">
+                                <p class="text-secondary"><span>{{ job.location }}</span>
+                                <p class="text-secondary">{{ job.created_at|timesince }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {% if is_paginated %}
+        <nav aria-label="Page navigation example" class="mb-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                    <a class="page-link" href="{{ prev_url }}" tabindex="-1">Previous</a>
+                </li>
+                {% for n in page_object.paginator.page_range %}
+                    {% if page_object.number == n %}
+                        <li class="page-item active">
+                            <a href="?page={{ n }}" class="page-link">{{ n }} <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% elif n > page_object.number|add:-3 and n < page_object.number|add:3 %}
+                        <li class="page-item">
+                            <a href="?page={{ n }}" class="page-link ">{{ n }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item {% if not next_url %} disabled {% endif %}">
+                    <a class="page-link" href="{{ next_url }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+
+{% endblock %}

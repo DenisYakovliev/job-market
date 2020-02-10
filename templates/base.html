@@ -1,0 +1,128 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <title>
+        {% block title %}
+            Job-Market
+        {% endblock %}
+    </title>
+    <style>
+        * {
+        margin: 0;
+        padding: 0;
+        font-family: 'Montserrat', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        nav .main-menu > * {
+            font-weight: 300;
+            border: 2px solid transparent;
+            padding: 10px 20px 10px 20px;
+        }
+
+        nav .main-menu > *:hover {
+            border-top: 2px solid red;
+        }
+
+        .box {
+            border: 1px solid black;
+        }
+
+        footer {
+            background: #f3f3f3;
+        }
+
+        .img-fluid {
+            opacity: 0.5;
+        }
+
+        .img-fluid:hover {
+            opacity: 0.8;
+        }
+
+        .block-title:after{
+            content: " ";
+            display: block;
+            width: 10%;
+            height: 2px;
+            margin: 20px auto 20px;
+            background: #17a2b8!important;
+        }
+
+
+    </style>
+</head>
+<body>
+    <nav class="bg-white shadow-sm sticky-top">
+        <div class="py-3 mx-auto d-flex justify-content-between align-items-center" style="padding-left:10%; padding-right: 10%">
+            <a class="logo text-decoration-none text-dark text-uppercase p-1 font-weight-bold" href="{% url 'home_page_url' %}">job-market</a>
+
+            <div class="main-menu d-flex justify-content-around">
+                <a class="text-decoration-none text-dark" href="{% url 'home_page_url' %}">Главная</a>
+                <a class="text-decoration-none text-dark" href="{% url 'jobs_list_url' %}">Вакансии</a>
+            </div>
+            <div class="user-system d-flex">
+                {% if request.user.is_authenticated %}
+                    <div class="dropdown mx-2">
+                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ request.user.get_full_name }}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {% if request.user.role == 'employer' %}
+                                <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='px-2' style="font-weight: 300; ">&#10010;</span></a>
+                                <a href="#" class="dropdown-item">Панель вакансий</a>
+                            {% elif request.user.role == 'employee'%}
+                                <a href="" class="dropdown-item">Мои вакансии</a>
+                            {% elif request.user.role == 'admin' and request.user.is_staff %}
+                                <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='px-2' style="font-weight: 300; ">&#10010;</span></a>
+                                <a href="" class="dropdown-item">Панель вакансий</a>
+                                <a href="" class="dropdown-item">База вакансий</a>
+                            {% endif %}
+
+                            <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Профиль</a>
+{#                            <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Изменить профиль</a>#}
+                            <a href="{% url 'logout_url' %}" class="dropdown-item">Выход</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="dropdown mx-2">
+                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Регистрация
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="{% url 'employee_register_url' %}">Работник</a>
+                            <a class="dropdown-item" href="{% url 'employer_register_url' %}">Работодатель</a>
+                        </div>
+                    </div>
+                    <a href="{% url 'login_url' %}" class="btn btn-info mx-2">Вход</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+        There is not any content
+    {% endblock %}
+    <footer class="text-uppercase text-center py-4">
+        © 2020 Copyright by Denis Yakovliev special for Team №7
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

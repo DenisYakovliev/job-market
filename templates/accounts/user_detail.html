@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Профиль {{ user.get_full_name }} - Job-Market
+{% endblock %}
+
+{% block content %}
+    <section class="register-section col-lg-6 offset-3 py-5">
+        <div class="shadow p-5">
+            <h3 class="header section-title text-uppercase pb-5 text-center text-dark">Профиль <span class="text-info pl-2" style="font-weight: 600;">{{ user.get_full_name }}</span></h3>
+            {% if user.role == 'employee'%}
+                <h4 class="pt-3" style="font-weight: 600;">Имя:</h4>
+                <h5 class="pb-3 pt-1">{{ user.first_name }}</h5>
+                <hr>
+                <h4 class="pt-3" style="font-weight: 600;">Фамилия:</h4>
+                <h5 class="pb-3 pt-1">{{ user.last_name }}</h5>
+                <hr>
+                <h4 class="py-3" style="font-weight: 600;">Информация о пользователе:</h4>
+                <h5 class="">{{ user.about }}</h5>
+            {% else %}
+                <h4 class="pt-3" style="font-weight: 600;">Компания:</h4>
+                <h5 class="pb-3 pt-1">{{ user.company_name }}</h5>
+                <hr>
+                <h4 class="pt-3" style="font-weight: 600;">Адрес Компании:</h4>
+                <h5 class="pb-3 pt-1">{{ user.company_address }}</h5>
+                <hr>
+                <h4 class="py-3" style="font-weight: 600;">Информация о компании:</h4>
+                <h5 class="pb-3">{{ user.about }}</h5>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

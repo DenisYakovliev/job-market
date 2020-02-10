@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Создание Вакансии - Job-Market
+{% endblock %}
+
+{% block content %}
+    <section class="register-section col-lg-6 offset-3 py-5">
+        <div class="shadow p-5">
+            <h3 class="section-title text-uppercase pb-5 text-center">Создание Вакансии</h3>
+
+            <form action="{% url 'job_create_url' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        {% if field.errors %}
+                            <div class="alert alert-danger alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+
+                        <label for="id_{{ field.name }}">{{ field.label }}</label>
+                        {{ field.as_widget }}
+                    </div>
+                {% endfor %}
+                <div class="text-center pt-4">
+                    <button type="submit" class="btn btn-info px-3" style="font-size: 18px">Выложить</button>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
