@@ -64,7 +64,6 @@
             background: #17a2b8!important;
         }
 
-
     </style>
 </head>
 <body>
@@ -83,19 +82,22 @@
                             {{ request.user.get_full_name }}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
                             {% if request.user.role == 'employer' %}
                                 <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='px-2' style="font-weight: 300; ">&#10010;</span></a>
-                                <a href="#" class="dropdown-item">Панель вакансий</a>
+                                <a href="{% url 'profile_jobs_panel_url' %}" class="dropdown-item">Панель вакансий</a>
+
                             {% elif request.user.role == 'employee'%}
                                 <a href="" class="dropdown-item">Мои вакансии</a>
+
                             {% elif request.user.role == 'admin' and request.user.is_staff %}
                                 <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='px-2' style="font-weight: 300; ">&#10010;</span></a>
-                                <a href="" class="dropdown-item">Панель вакансий</a>
+                                <a href="{% url 'profile_jobs_panel_url' %}" class="dropdown-item">Панель вакансий</a>
                                 <a href="" class="dropdown-item">База вакансий</a>
                             {% endif %}
 
                             <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Профиль</a>
-{#                            <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Изменить профиль</a>#}
+                            <a href="{% url 'profile_detail_url' request.user.id %}" class="dropdown-item">Изменить профиль</a>
                             <a href="{% url 'logout_url' %}" class="dropdown-item">Выход</a>
                         </div>
                     </div>

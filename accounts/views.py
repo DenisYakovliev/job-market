@@ -94,10 +94,15 @@ class ProfileDetailView(View):
         return render(request, self.template, context={'user': obj})
 
 
-# class ProfileJobsView(View):
-#     def get(self, request):
-#         pass
-#
-#     def post(self, request):
-#         pass
+class ProfileJobsPanelView(View):
+    template = 'accounts/user_jobs_panel.html'
+
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    @method_decorator(user_is_employer)
+    def get(self, request):
+        jobs = Job.objects.filter(user_id=self.request.user.id)
+        return render(request, self.template, context={"jobs": jobs})
+
+    def post(self, request):
+        pass
 
