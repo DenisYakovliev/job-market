@@ -11,7 +11,7 @@
             <h5 class="heading text-center text-uppercase pb-4" style="font-weight: 600;">
                 Найди <span class="text-warning">работу</span>, которую ты <span class="text-warning">полюбишь</span>.
             </h5>
-            <form id="job-main-form" method="get" action="{% url 'jobs_list_url' %}">
+            <form class="job-main-form" method="get" action="{% url 'jobs_list_url' %}">
                 <div class="d-flex">
                     <div class="col-md-5">
                         <div class="form-group">
@@ -23,7 +23,7 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="location">Адрес</label>
-                            <input type="text" id="location" name="location_query"
+                            <input type="text" id="location" name="location"
                                    placeholder="Адрес вакансии" class="form-control">
                         </div>
                     </div>

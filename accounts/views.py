@@ -133,7 +133,7 @@ class ProfileJobsPanelView(View):
         else:
             self.objects = Job.objects.filter(user_id=self.request.user.id)
 
-        paginator = Paginator(self.objects, 10)
+        paginator = Paginator(self.objects, 5)
         page_number = request.GET.get('page', 1)
         page = paginator.get_page(page_number)
         is_paginated = page.has_other_pages()
