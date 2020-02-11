@@ -58,10 +58,15 @@ class JobDetail(View):
     def get(self, request, job_id):
         model = Job
         obj = get_object_or_404(model, id=job_id)
+        applicants = None
+
         if obj is not None:
             obj.views += 1
             obj.save()
-        return render(request, self.template, context={model.__name__.lower(): obj})
+
+            applicants = Applicant.objects.filter(job_id=obj.id)
+
+        return render(request, self.template, context={model.__name__.lower(): obj, 'applicants': applicants})
 
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     def post(self, request, job_id):

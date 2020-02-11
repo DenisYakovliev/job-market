@@ -44,7 +44,7 @@
                                     </td>
                                     <td>{{ job.created_at }}</td>
                                     <td>
-                                        <a href="" class="btn btn-success">{{ job.applicants.count }} <span class="pl-2">Заявок</span></a>
+                                        <a href="{{ job.get_absolute_url }}" class="btn btn-success">{{ job.applicants.count }} <span class="pl-2">Заявок</span></a>
                                     </td>
                                     <td>
                                         {% if job.filled %}
