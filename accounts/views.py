@@ -125,11 +125,14 @@ class ProfileJobsPanelView(View):
     template = 'accounts/user_jobs_panel.html'
 
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
-    @method_decorator(user_is_employer)
     def get(self, request):
-        jobs = Job.objects.filter(user_id=self.request.user.id)
+        if request.user.role == 'employee':
+            self.objects = Applicant.objects.filter(user_id=self.request.user.id).order_by('-created_at')
+            self.template = 'accounts/employee/jobs_panel.html'
+        else:
+            self.objects = Job.objects.filter(user_id=self.request.user.id)
 
-        paginator = Paginator(jobs, 10)
+        paginator = Paginator(self.objects, 10)
         page_number = request.GET.get('page', 1)
         page = paginator.get_page(page_number)
         is_paginated = page.has_other_pages()

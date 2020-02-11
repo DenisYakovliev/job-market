@@ -91,11 +91,11 @@ class ObjectDeleteMixin:
 
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     @method_decorator(user_is_employer)
-    def get(self, request, id):
-        obj = self.model.objects.get(id=id)
+    def get(self, request, job_id):
+        obj = self.model.objects.get(id=job_id)
         return render(request, self.template, context={self.model.__name__.lower(): obj})
 
-    def post(self, request, id):
-        obj = self.model.objects.get(id=id)
+    def post(self, request, job_id):
+        obj = self.model.objects.get(id=job_id)
         obj.delete()
         return redirect(reverse(self.redirect_url))

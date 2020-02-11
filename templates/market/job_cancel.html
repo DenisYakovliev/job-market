@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Отмена заявки - Job-Market
+{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto text-center my-4">
+        <form action="{% url 'job_cancel_url' applicant.job.id %}" method="post">
+            {% csrf_token %}
+            <h5 class="mb-5">Вы уверены, что хотите отменить заявку на вакансию <b>"{{ applicant.job.title }}"</b>?</h5>
+            <a class="btn btn-info mr-4" href="{% url 'profile_jobs_panel_url' %}">Меню заявок</a>
+            <input type="submit" class="btn btn-danger" value="Отменить заявку">
+        </form>
+    </div>
+
+{% endblock %}

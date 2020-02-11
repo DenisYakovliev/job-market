@@ -87,7 +87,23 @@ class JobUpdate(ObjectUpdateMixin, View):
 
 
 class JobDelete(ObjectDeleteMixin, View):
-    # login_url = 'login_url'
     model = Job
     template = 'market/job_delete.html'
-    redirect_url = 'job_list_url'
+    redirect_url = 'profile_jobs_panel_url'
+
+
+class JobCancel(View):
+    model = Applicant
+    template = 'market/job_cancel.html'
+    redirect_url = 'profile_jobs_panel_url'
+
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    @method_decorator(user_is_employee)
+    def get(self, request, job_id):
+        obj = get_object_or_404(self.model, job_id=job_id, user_id=request.user.id)
+        return render(request, self.template, context={self.model.__name__.lower(): obj})
+
+    def post(self, request, job_id):
+        obj = self.model.objects.get(user_id=request.user.id, job_id=job_id)
+        obj.delete()
+        return redirect(reverse(self.redirect_url))

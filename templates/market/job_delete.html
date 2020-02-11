@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Удалить вакансию - Job-Market
+{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto text-center my-4">
+        <form action="{{ job.get_delete_url }}" method="post">
+            {% csrf_token %}
+            <h5 class="mb-5">Вы уверены, что хотите удалить <b>"{{ job.title }}"</b> вакансию?</h5>
+            <a class="btn btn-info mr-4" href="{% url 'profile_jobs_panel_url' %}">Отмена</a>
+            <input type="submit" class="btn btn-danger" value="Удалить">
+        </form>
+    </div>
+
+{% endblock %}

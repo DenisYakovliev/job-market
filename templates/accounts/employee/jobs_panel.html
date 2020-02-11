@@ -2,57 +2,51 @@
 {% load static %}
 
 {% block title %}
-    Панель вакансий - Job-Market
+    Мои заявки - Job-Market
 {% endblock %}
 
 {% block content %}
-     <section>
+    <section>
         <div class="py-5" style="background: #fafafa;">
             <div class="container text-center py-2">
-                <h1 class="block-title text-uppercase pb-3" style="font-weight: 600; letter-spacing: 0.1rem;">Панель вакансий</h1>
-                <h4 class="text-muted">Все созданные вакансии <span class="text-uppercase text-info">{{ request.user.get_full_name }}</span></h4>
+                <h1 class="block-title text-uppercase pb-3" style="font-weight: 600; letter-spacing: 0.1rem;">Мои заявки</h1>
+                <h4 class="text-muted">Все заявки <span class="text-uppercase text-info">{{ request.user.get_full_name }}</span></h4>
             </div>
         </div>
 
         <div class="container pb-5">
-            <div class="row">
-                <div class="col-lg-12 text-right py-5 my-2">
-                    <a href="{% url 'job_create_url' %}" class="btn btn-info"><span class='mr-3' style="font-weight: 300; ">&#10010;</span>Добавить вакансию</a>
-                </div>
-                <div class="table-responsive">
+            <div class="row my-5">
+                <div class="table-responsive ">
                         <table class="table table-striped table-hover" style="font-size: 0.9rem">
                         <thead>
                             <tr>
-                            <th>Название Вакансии</th>
-                            <th>Нанято</th>
-                            <th>Дата создания</th>
-{#                                <th>Date expiring</th>#}
-                            <th>Заявки</th>
-                            <th>Управление</th>
-                        </tr>
+                                <th>Название Вакансии</th>
+                                <th>Название Компании</th>
+                                <th>Времени с отправки</th>
+                                <th>Дата отправки</th>
+                                <th>Согласие</th>
+                                <th>Управление</th>
+                            </tr>
                         </thead>
                         <tbody>
                             {% for job in page_object %}
                                 <tr>
-                                    <th><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></th>
+                                    <th><a href="{% url 'job_detail_url' job.job.id %}">{{ job.job.title|truncatechars:30 }}</a></th>
+                                    <td>{{ job.job.user.company_name }}</td>
+                                    <td>{{ job.created_at|timesince }}</td>
+                                    <td>{{ job.created_at }}</td>
                                     <td>
-                                        {% if job.filled %}
+                                        {% if job.job.filled %}
                                             <span class="badge badge-success p-2">Нанято</span>
                                         {% else %}
                                             <span class="badge badge-secondary p-2">Не нанято</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ job.created_at }}</td>
                                     <td>
-                                        <a href="" class="btn btn-success">{{ job.applicants.count }} <span class="pl-2">Заявок</span></a>
-                                    </td>
-                                    <td>
-                                        {% if job.filled %}
+                                        {% if job.job.filled %}
                                             <a href="" class="btn btn-outline-success my-1">Нанято</a><br>
                                         {% endif %}
-                                        <a href="{{ job.get_update_url }}" class="btn btn-outline-info my-1">&#9998; Редактировать</a>
-                                        <br>
-                                        <a href="{{ job.get_delete_url }}" class="btn btn-outline-danger my-1">&#10006; Удалить</a>
+                                        <a href="{% url 'job_cancel_url' job.job.id %}" class="btn btn-outline-danger my-1">&#10006; Отменить заявку</a>
                                     </td>
                                 </tr>
                             {% endfor %}
