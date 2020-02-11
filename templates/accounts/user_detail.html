@@ -29,7 +29,7 @@
                 <p class="pb-3">{{ user.about }}</p>
             {% endif %}
             <div class="text-center pt-5">
-                <a href="" class="btn btn-info">&#9998;	Редактировать профиль</a>
+                <a href="{% url 'employer_profile_update_url' %}" class="btn btn-info">&#9998; Редактировать профиль</a>
             </div>
         </div>
     </section>

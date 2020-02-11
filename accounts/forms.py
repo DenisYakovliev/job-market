@@ -196,3 +196,59 @@ class EmployerRegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class EmployeeUpdateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EmployeeUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].label = "Имя"
+        self.fields['last_name'].label = "Фамилия"
+        self.fields['about'].label = "Инофрмация о себе"
+
+        self.fields['about'].widget = forms.Textarea()
+
+        self.fields['first_name'].widget.attrs.update({
+            'placeholder': 'Введите Имя',
+            'class': 'form-control'
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'placeholder': 'Введите Фамилию',
+            'class': 'form-control'
+        })
+        self.fields['about'].widget.attrs.update({
+            'placeholder': 'Введите информацию о себе',
+            'class': 'form-control'
+        })
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'about']
+
+
+class EmployerUpdateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EmployerUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['company_name'].label = "Назвавание Компании"
+        self.fields['company_address'].label = "Адрес Компании"
+        self.fields['about'].label = "Информация о компании"
+
+        self.fields['about'].widget = forms.Textarea()
+
+        self.fields['company_name'].widget.attrs.update(
+            {
+                'placeholder': 'Введите Назвавание Компании',
+                'class': 'form-control'
+            })
+        self.fields['company_address'].widget.attrs.update(
+            {
+                'placeholder': 'Введите Адрес Компании',
+                'class': 'form-control'
+            })
+        self.fields['about'].widget.attrs.update({
+            'placeholder': 'Введите информацию о компании',
+            'class': 'form-control'
+        })
+
+    class Meta:
+        model = User
+        fields = ['company_name', 'company_address', 'about']

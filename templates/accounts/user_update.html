@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block content %}
-    <section class="register-section col-lg-6 offset-3 py-5">
+    <section class="container py-5">
         <div class="shadow p-5">
-            <h3 class="section-title text-uppercase pb-5 text-center">Рудактирование данных</h3>
+            <h3 class="block-title text-uppercase pb-5 text-center">Редактировать профиль <span class="text-info">{{ user.get_full_name }}</span></h3>
 
-            <form action="" method="post">
+            <form action="{% url 'employer_profile_update_url' %}" method="post">
                 {% csrf_token %}
 
                 {% for field in form %}

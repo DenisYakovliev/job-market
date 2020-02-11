@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block title %}
-    Создание Вакансии - Job-Market
+    Редактирование вакансии - Job-Market
 {% endblock %}
 
 {% block content %}
     <section class="container py-5">
         <div class="shadow p-5">
-            <h3 class="section-title text-uppercase pb-5 text-center">Редактирование вакансии</h3>
+            <h3 class="section-title text-uppercase pb-5 text-center">Редактировать вакансию</h3>
 
             <form action="{{ job.get_update_url }}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}

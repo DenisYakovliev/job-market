@@ -91,9 +91,34 @@ class ProfileDetailView(View):
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     def get(self, request):
         obj = get_object_or_404(self.model, id=request.user.id)
-        if obj.role == 'admin' and not request.user.role == 'admin':
-            raise PermissionDenied
         return render(request, self.template, context={'user': obj})
+
+
+class ProfileUpdateView(UpdateView):
+    model = User
+    # form_class = EmployeeUpdateForm
+    template_name = 'accounts/user_update.html'
+    success_url = reverse_lazy('profile_detail_url')
+
+    def get_form_class(self):
+        if self.request.user.role == 'employee':
+            self.form_class = EmployeeUpdateForm
+            return self.form_class
+        else:
+            self.form_class = EmployerUpdateForm
+            return self.form_class
+
+    @method_decorator(login_required(login_url=reverse_lazy('home_page_url')))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(self.request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return self.render_to_response(self.get_context_data())
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
 
 
 class ProfileJobsPanelView(View):
