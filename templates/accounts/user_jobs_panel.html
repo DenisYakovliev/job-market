@@ -26,7 +26,8 @@
                             <th>Название Вакансии</th>
                             <th>Нанято</th>
                             <th>Дата создания</th>
-{#                                <th>Date expiring</th>#}
+                            <th>Дата найма</th>
+                            <th>Комиссия ($)</th>
                             <th>Заявки</th>
                             <th>Управление</th>
                         </tr>
@@ -43,16 +44,19 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ job.created_at }}</td>
+                                    <td>{{ job.last_date }}</td>
+                                    <td>{{ job.price }}</td>
                                     <td>
-                                        <a href="{{ job.get_absolute_url }}" class="btn btn-success">{{ job.applicants.count }} <span class="pl-2">Заявок</span></a>
+                                        <a href="{{ job.get_absolute_url }}" class="btn btn-success btn-sm">{{ job.applicants.count }} <span class="pl-2">Заявок</span></a>
                                     </td>
                                     <td>
                                         {% if job.filled %}
-                                            <a href="" class="btn btn-outline-success my-1">Нанято</a><br>
+                                            <a href="" class="btn btn-success btn-sm my-1">Нанято</a><br>
+                                        {% else %}
+                                            <a href="{{ job.get_update_url }}" class="btn btn-outline-info btn-sm my-1">&#9998; Редактировать</a>
+                                            <br>
                                         {% endif %}
-                                        <a href="{{ job.get_update_url }}" class="btn btn-outline-info my-1">&#9998; Редактировать</a>
-                                        <br>
-                                        <a href="{{ job.get_delete_url }}" class="btn btn-outline-danger my-1">&#10006; Удалить</a>
+                                        <a href="{{ job.get_delete_url }}" class="btn btn-outline-danger btn-sm my-1">&#10006; Удалить</a>
                                     </td>
                                 </tr>
                             {% endfor %}

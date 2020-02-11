@@ -22,8 +22,8 @@
                             <tr>
                                 <th>Название Вакансии</th>
                                 <th>Название Компании</th>
-                                <th>Времени с отправки</th>
                                 <th>Дата отправки</th>
+                                <th>Дата принятия</th>
                                 <th>Согласие</th>
                                 <th>Управление</th>
                             </tr>
@@ -33,8 +33,8 @@
                                 <tr>
                                     <th><a href="{% url 'job_detail_url' job.job.id %}">{{ job.job.title|truncatechars:30 }}</a></th>
                                     <td>{{ job.job.user.company_name }}</td>
-                                    <td>{{ job.created_at|timesince }}</td>
                                     <td>{{ job.created_at }}</td>
+                                    <td>{{ job.last_date }}</td>
                                     <td>
                                         {% if job.job.filled %}
                                             <span class="badge badge-success p-2">Нанято</span>
@@ -44,9 +44,10 @@
                                     </td>
                                     <td>
                                         {% if job.job.filled %}
-                                            <a href="" class="btn btn-outline-success my-1">Нанято</a><br>
+                                            <a href="" class="btn btn-success btn-sm my-1">Нанято</a><br>
+                                        {% else %}
+                                            <a href="{% url 'job_cancel_url' job.job.id %}" class="btn btn-outline-danger btn-sm my-1">&#10006; Отменить заявку</a>
                                         {% endif %}
-                                        <a href="{% url 'job_cancel_url' job.job.id %}" class="btn btn-outline-danger my-1">&#10006; Отменить заявку</a>
                                     </td>
                                 </tr>
                             {% endfor %}

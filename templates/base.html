@@ -86,7 +86,7 @@
                             {% if request.user.role == 'employer' %}
                                 <a href="{% url 'job_create_url' %}" class="dropdown-item">Добавить вакансию <span class='pl-1' style="font-weight: 100; ">&#10010;</span></a>
                                 <a href="{% url 'profile_jobs_panel_url' %}" class="dropdown-item">Панель вакансий</a>
-                                <a href="" class="dropdown-item">Заявки на работу</a>
+                                <a href="{% url 'profile_applicants_detail_url' %}" class="dropdown-item">Заявки на работу</a>
 
                             {% elif request.user.role == 'employee'%}
                                 <a href="{% url 'profile_jobs_panel_url' %}" class="dropdown-item">Мои заявки</a>

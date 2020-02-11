@@ -106,6 +106,10 @@ class JobCancel(View):
     @method_decorator(user_is_employee)
     def get(self, request, job_id):
         obj = get_object_or_404(self.model, job_id=job_id, user_id=request.user.id)
+        print(obj.is_filled)
+        if obj is not None:
+            if obj.is_filled:
+                return redirect('profile_jobs_panel_url')
         return render(request, self.template, context={self.model.__name__.lower(): obj})
 
     def post(self, request, job_id):

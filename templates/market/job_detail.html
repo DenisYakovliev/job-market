@@ -87,29 +87,34 @@
         {% if request.user.role == 'employer' and request.user.id == job.user.id %}
             <div class="container pb-5">
                 <h3 class="block-title text-uppercase text-center pb-5" style="font-weight: 600;">Заявок на вакансию: <span class="text-info pl-2">{{ applicants.count }}</span></h3>
-                
-                {% if applicants.count > 0 %}
-                    <div class="">
-                        {% for applicant in applicants %}
-                            <div class="shadow col-lg-8 px-4">
-                                <div class="d-flex py-4">
-                                    <div class="col-lg-3 align-self-center">
-                                        <img src="{% static 'img/avatar.png' %}" alt="User" class="img-fluid" style="">
-                                    </div>
-                                    <div class="ml-2">
-                                        <p class="text-dark" style="font-size: 1.5rem; font-weight: 600;">{{ applicant.user.get_full_name }}</p>
-                                        <p class="text-secondary">Email: <span class="ml-2">{{ applicant.user.email }}</span></p>
-                                        <p>{{ applicant.user.about }}</p>
-                                    </div>
+                <div class="">
+                    {% for applicant in applicants %}
+                        <div class="shadow col-lg-8 px-4">
+                            <div class="d-flex py-4">
+                                <div class="col-lg-3 align-self-center">
+                                    <img src="{% static 'img/avatar.png' %}" alt="User" class="img-fluid" style="">
                                 </div>
-                                <div class="d-flex pt-2 pb-4 justify-content-between">
-                                    <a href="" class="btn btn-warning">Одобрить кандидата</a>
-                                    <p class="">Подал <span class="mx-1">{{ job.created_at|timesince }}</span> назад.</p>
+                                <div class="ml-2">
+                                    <p class="text-dark" style="font-size: 1.5rem; font-weight: 600;">{{ applicant.user.get_full_name }}</p>
+                                    <p class="text-secondary">Email: <span class="ml-2">{{ applicant.user.email }}</span></p>
+                                    <p>{{ applicant.user.about }}</p>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                            <div class="d-flex pt-2 pb-4 justify-content-between">
+                                {% if applicant.is_filled %}
+                                    <input type="button" value="Заявка одобрена!" class="btn btn-success">
+                                {% else %}
+                                    <form action="{% url 'profile_applicants_detail_url' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="applicant" value="{{ applicant.id }}">
+                                        <input type="submit" value="Одобрить кандидата" class="btn btn-warning">
+                                    </form>
+                                {% endif %}
+                                <p class="">Подал <span class="mx-1">{{ applicant.created_at|timesince }}</span> назад.</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
     </section>

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Заявки на работу - Job-Market
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="pb-5">
+            <div class="py-5" style="background: #fafafa;">
+                <div class="container text-center py-2">
+                    <h1 class="block-title text-uppercase pb-3" style="font-weight: 600; letter-spacing: 0.1rem;">Заявки на работу </h1>
+                    <h4 class="text-muted">Всего заявок на вакансии: <span class="text-info pl-1" style="font-weight: 600">{{ objs_found }}</span></h4>
+                </div>
+            </div>
+            <div class="container pt-5">
+                {% for applicant in page_object %}
+                    <div class="shadow col-lg-8 px-4">
+                        <div class="d-flex py-4">
+                            <div class="col-lg-3 align-self-center">
+                                <img src="{% static 'img/avatar.png' %}" alt="User" class="img-fluid" style="">
+                            </div>
+                            <div class="ml-2">
+                                <p class="text-dark" style="font-size: 1.5rem; font-weight: 600;">{{ applicant.user.get_full_name }}</p>
+                                <p class="text-secondary">Email: <span class="ml-2">{{ applicant.user.email }}</span></p>
+                                <p>{{ applicant.user.about }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex pt-2 pb-4 justify-content-between">
+                            {% if applicant.is_filled%}
+                                <input type="button" value="Заявка одобрена!" class="btn btn-success">
+                            {% else %}
+                                <form action="{% url 'profile_applicants_detail_url' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="applicant" value="{{ applicant.id }}">
+                                    <input type="submit" value="Одобрить кандидата" class="btn btn-warning">
+                                </form>
+                            {% endif %}
+                            <p class="">Подал <span class="mx-1">{{ applicant.created_at|timesince }}</span> назад.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Page navigation example" class="mb-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{ prev_url }}" tabindex="-1">Previous</a>
+                    </li>
+                    {% for n in page_object.paginator.page_range %}
+                        {% if page_object.number == n %}
+                            <li class="page-item active">
+                                <a href="?page={{ n }}" class="page-link">{{ n }} <span class="sr-only">(current)</span></a>
+                            </li>
+                        {% elif n > page_object.number|add:-3 and n < page_object.number|add:3 %}
+                            <li class="page-item">
+                                <a href="?page={{ n }}" class="page-link ">{{ n }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item {% if not next_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{ next_url }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+    </section>
+{% endblock %}

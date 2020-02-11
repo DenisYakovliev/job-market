@@ -67,6 +67,9 @@ class ObjectUpdateMixin:
     def get(self, request, job_id):
         obj = self.model.objects.get(id=job_id)
 
+        if obj.filled:
+            return redirect('profile_jobs_panel_url')
+
         if request.user.id == obj.user.id or request.user.role == 'admin':
             bound_form = self.model_form(instance=obj)
             context = {'form': bound_form, self.model.__name__.lower(): obj}

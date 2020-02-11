@@ -6,8 +6,9 @@ urlpatterns = [
     path('employee/register', EmployeeRegisterView.as_view(), name='employee_register_url'),
     path('employer/register', EmployerRegisterView.as_view(), name='employer_register_url'),
     path('profile/', ProfileDetailView.as_view(), name='profile_detail_url'),
-    path('profile/update', ProfileUpdateView.as_view(), name='employer_profile_update_url'),
+    path('profile/update', ProfileUpdateView.as_view(), name='profile_update_url'),
     path('profile/jobs', ProfileJobsPanelView.as_view(), name='profile_jobs_panel_url'),
+    path('profile/applicants', ProfileApplicantsDetailView.as_view(), name='profile_applicants_detail_url'),
     path('logout', UserLogoutView.as_view(), name='logout_url'),
     path('login', UserLoginView.as_view(), name='login_url'),
 ]

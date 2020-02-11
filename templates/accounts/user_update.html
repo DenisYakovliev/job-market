@@ -10,7 +10,7 @@
         <div class="shadow p-5">
             <h3 class="block-title text-uppercase pb-5 text-center">Редактировать профиль <span class="text-info">{{ user.get_full_name }}</span></h3>
 
-            <form action="{% url 'employer_profile_update_url' %}" method="post">
+            <form action="{% url 'profile_update_url' %}" method="post">
                 {% csrf_token %}
 
                 {% for field in form %}

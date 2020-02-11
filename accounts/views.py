@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from django.urls import reverse_lazy
 from django.views.generic import View, UpdateView
 from django.contrib.auth.views import LogoutView, LoginView, FormView
@@ -155,3 +156,55 @@ class ProfileJobsPanelView(View):
         }
 
         return render(request, self.template, context=context)
+
+
+class ProfileApplicantsDetailView(View):
+    model = Applicant
+    template = 'accounts/employer/applicants_detail.html'
+
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    @method_decorator(user_is_employer)
+    def get(self, request):
+        objs = self.model.objects.filter(job__user_id=self.request.user.id)
+        objs_found = len(objs)
+
+        paginator = Paginator(objs, 5)
+        page_number = request.GET.get('page', 1)
+        page = paginator.get_page(page_number)
+        is_paginated = page.has_other_pages()
+
+        if page.has_previous():
+            prev_url = '?page={}'.format(page.previous_page_number())
+        else:
+            prev_url = ''
+
+        if page.has_next():
+            next_url = '?page={}'.format(page.next_page_number())
+        else:
+            next_url = ''
+
+        context = {
+            'page_object': page,
+            'is_paginated': is_paginated,
+            'objs_found': objs_found,
+            'prev_url': prev_url,
+            'next_url': next_url,
+        }
+
+        return render(request, template_name=self.template, context=context)
+
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    def post(self, request):
+        applicant = Applicant.objects.get(id=request.POST['applicant'])
+        applicant.is_filled = True
+        applicant.last_date = timezone.now()
+        applicant.save()
+        not_filled_applicants = Applicant.objects.filter(job_id=applicant.job.id).exclude(user_id=applicant.user.id)
+        not_filled_applicants.delete()
+
+        job = Job.objects.get(id=applicant.job.id)
+        job.filled = True
+        job.last_date = timezone.now()
+        job.price = job.price + int(job.last_date - job.created_at) * 2
+        job.save()
+        return redirect('profile_jobs_panel_url')
