@@ -1,16 +1,21 @@
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.views.generic import View, UpdateView
 from django.contrib.auth.views import LogoutView, LoginView, FormView
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 
 from .models import User
 from .forms import *
 from market.utils import *
 from market.models import *
 from market.forms import *
+
+from fpdf import FPDF
+from pickle import dumps
 
 
 class EmployeeRegisterView(View):
@@ -211,32 +216,66 @@ class ProfileApplicantsDetailView(View):
 
 
 class AdminDashboardView(View):
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     def get(self, request):
-        jobs = Job.objects.all()
-
-        jobs_found = len(jobs)
-
-        paginator = Paginator(jobs, 10)
-        page_number = request.GET.get('page', 1)
-        page = paginator.get_page(page_number)
-        is_paginated = page.has_other_pages()
-
-        if page.has_previous():
-            prev_url = '?page={}'.format(page.previous_page_number())
+        if request.user.role != 'admin':
+            raise PermissionDenied
         else:
-            prev_url = ''
+            jobs = Job.objects.all()
 
-        if page.has_next():
-            next_url = '?page={}'.format(page.next_page_number())
+            jobs_found = len(jobs)
+
+            paginator = Paginator(jobs, 10)
+            page_number = request.GET.get('page', 1)
+            page = paginator.get_page(page_number)
+            is_paginated = page.has_other_pages()
+
+            if page.has_previous():
+                prev_url = '?page={}'.format(page.previous_page_number())
+            else:
+                prev_url = ''
+
+            if page.has_next():
+                next_url = '?page={}'.format(page.next_page_number())
+            else:
+                next_url = ''
+
+            context = {
+                'page_object': page,
+                'jobs_found': jobs_found,
+                'is_paginated': is_paginated,
+                'prev_url': prev_url,
+                'next_url': next_url,
+            }
+
+            return render(request, 'accounts/admin/dashboard.html', context=context)
+
+
+class AdminDataDownload(View):
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    def get(self, request):
+        if request.user.role != 'admin':
+            raise PermissionDenied
         else:
-            next_url = ''
+            data = dict()
+            data['model'] = 'Job'
+            data['fields'] = [f.name for f in Job._meta.get_fields()]
+            data['model_data'] = list(Job.objects.all().values())
 
-        context = {
-            'page_object': page,
-            'jobs_found': jobs_found,
-            'is_paginated': is_paginated,
-            'prev_url': prev_url,
-            'next_url': next_url,
-        }
+            response = JsonResponse(data)
+            response['Content-Disposition'] = 'attachment; filename=job-table-data.json'
+            return response
 
-        return render(request, 'accounts/admin/dashboard.html', context=context)
+
+class ProfileDataDownload(View):
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    @method_decorator(user_is_employer)
+    def get(self, request):
+        data = dict()
+        data['model'] = 'Job'
+        data['fields'] = [f.name for f in Job._meta.get_fields()]
+        data['model_data'] = list(Job.objects.filter(user_id=request.user.id).values())
+
+        response = JsonResponse(data)
+        response['Content-Disposition'] = 'attachment; filename=user-jobs-data.json'
+        return response
