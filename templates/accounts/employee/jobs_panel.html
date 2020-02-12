@@ -9,77 +9,82 @@
     <section>
         <div class="py-5" style="background: #fafafa;">
             <div class="container text-center py-2">
-                <h1 class="block-title text-uppercase pb-3" style="font-weight: 600; letter-spacing: 0.1rem;">Мои заявки</h1>
-                <h4 class="text-muted">Все заявки <span class="text-uppercase text-info">{{ request.user.get_full_name }}</span></h4>
+                <h1 class="block-title text-uppercase pb-3" style="font-weight: 600; letter-spacing: 0.1rem;">Мои
+                    заявки</h1>
+                <h4 class="text-muted">Все заявки <span
+                        class="text-uppercase text-info">{{ request.user.get_full_name }}</span></h4>
             </div>
         </div>
 
         <div class="container pb-5">
             <div class="row my-5">
                 <div class="table-responsive ">
-                        <table class="table table-striped table-hover" style="font-size: 0.9rem">
+                    <table class="table table-striped table-hover" style="font-size: 0.9rem">
                         <thead>
-                            <tr>
-                                <th>Название Вакансии</th>
-                                <th>Название Компании</th>
-                                <th>Дата отправки</th>
-                                <th>Дата принятия</th>
-                                <th>Согласие</th>
-                                <th>Управление</th>
-                            </tr>
+                        <tr>
+                            <th>Название Вакансии</th>
+                            <th>Название Компании</th>
+                            <th>Дата отправки</th>
+                            <th>Дата принятия</th>
+                            <th>Согласие</th>
+                            <th>Управление</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for job in page_object %}
-                                <tr>
-                                    <th><a href="{% url 'job_detail_url' job.job.id %}">{{ job.job.title|truncatechars:30 }}</a></th>
-                                    <td>{{ job.job.user.company_name }}</td>
-                                    <td>{{ job.created_at }}</td>
-                                    <td>{{ job.last_date }}</td>
-                                    <td>
-                                        {% if job.job.filled %}
-                                            <span class="badge badge-success p-2">Нанято</span>
-                                        {% else %}
-                                            <span class="badge badge-secondary p-2">Не нанято</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if job.job.filled %}
-                                            <a href="" class="btn btn-success btn-sm my-1">Нанято</a><br>
-                                        {% else %}
-                                            <a href="{% url 'job_cancel_url' job.job.id %}" class="btn btn-outline-danger btn-sm my-1">&#10006; Отменить заявку</a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        {% for job in page_object %}
+                            <tr>
+                                <th>
+                                    <a href="{% url 'job_detail_url' job.job.id %}">{{ job.job.title|truncatechars:30 }}</a>
+                                </th>
+                                <td>{{ job.job.user.company_name }}</td>
+                                <td>{{ job.created_at }}</td>
+                                <td>{{ job.last_date }}</td>
+                                <td>
+                                    {% if job.job.filled %}
+                                        <span class="badge badge-success p-2">Нанято</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary p-2">Не нанято</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if job.job.filled %}
+                                        <a href="{% url 'job_invite_download_url' job.id %}" class="btn btn-success btn-sm my-1">Скачать приглашение</a><br>
+                                    {% else %}
+                                        <a href="{% url 'job_cancel_url' job.job.id %}"
+                                           class="btn btn-outline-danger btn-sm my-1">&#10006; Отменить заявку</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-     {% if is_paginated %}
-        <nav aria-label="Page navigation example" class="mb-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item {% if not prev_url %} disabled {% endif %}">
-                    <a class="page-link" href="{{ prev_url }}" tabindex="-1">Previous</a>
-                </li>
-                {% for n in page_object.paginator.page_range %}
-                    {% if page_object.number == n %}
-                        <li class="page-item active">
-                            <a href="?page={{ n }}" class="page-link">{{ n }} <span class="sr-only">(current)</span></a>
-                        </li>
-                    {% elif n > page_object.number|add:-3 and n < page_object.number|add:3 %}
-                        <li class="page-item">
-                            <a href="?page={{ n }}" class="page-link ">{{ n }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                <li class="page-item {% if not next_url %} disabled {% endif %}">
-                    <a class="page-link" href="{{ next_url }}">Next</a>
-                </li>
-            </ul>
-        </nav>
-    {% endif %}
+        {% if is_paginated %}
+            <nav aria-label="Page navigation example" class="mb-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{ prev_url }}" tabindex="-1">Previous</a>
+                    </li>
+                    {% for n in page_object.paginator.page_range %}
+                        {% if page_object.number == n %}
+                            <li class="page-item active">
+                                <a href="?page={{ n }}" class="page-link">{{ n }} <span class="sr-only">(current)</span></a>
+                            </li>
+                        {% elif n > page_object.number|add:-3 and n < page_object.number|add:3 %}
+                            <li class="page-item">
+                                <a href="?page={{ n }}" class="page-link ">{{ n }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item {% if not next_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{ next_url }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
 
     </section>
 {% endblock %}

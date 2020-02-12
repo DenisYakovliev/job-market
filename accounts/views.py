@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.views.generic import View, UpdateView
 from django.contrib.auth.views import LogoutView, LoginView, FormView
 from django.contrib.auth import authenticate, login
@@ -14,8 +14,8 @@ from market.utils import *
 from market.models import *
 from market.forms import *
 
-from fpdf import FPDF
-from pickle import dumps
+import io
+from reportlab.pdfgen import canvas
 
 
 class EmployeeRegisterView(View):
@@ -251,7 +251,7 @@ class AdminDashboardView(View):
             return render(request, 'accounts/admin/dashboard.html', context=context)
 
 
-class AdminDataDownload(View):
+class AdminDataDownloadView(View):
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     def get(self, request):
         if request.user.role != 'admin':
@@ -267,7 +267,7 @@ class AdminDataDownload(View):
             return response
 
 
-class ProfileDataDownload(View):
+class ProfileDataDownloadView(View):
     @method_decorator(login_required(login_url=reverse_lazy('login_url')))
     @method_decorator(user_is_employer)
     def get(self, request):
@@ -279,3 +279,38 @@ class ProfileDataDownload(View):
         response = JsonResponse(data)
         response['Content-Disposition'] = 'attachment; filename=user-jobs-data.json'
         return response
+
+
+class JobInviteDownloadView(View):
+    @method_decorator(login_required(login_url=reverse_lazy('login_url')))
+    @method_decorator(user_is_employee)
+    def get(self, request, id):
+        applicant = get_object_or_404(Applicant, id=id)
+
+        if request.user.id != applicant.user.id:
+            raise PermissionDenied
+        else:
+            buffer = io.BytesIO()
+
+            p = canvas.Canvas(buffer)
+            p.setTitle('Job Invite')
+            p.drawString(50, 750, "Dear candidate!")
+
+            text = "Our company has approved your application for a job:"
+            p.drawString(50, 650, text)
+            text = "\"{}\"".format(applicant.job.title)
+            p.drawString(50, 630, text)
+            text = "We invite you to join the team of company employees for this position."
+            p.drawString(50, 610, text)
+
+            p.drawString(50, 500, "Salary: {}$".format(applicant.job.salary))
+            p.drawString(50, 480, "Company address: {}".format(applicant.job.location))
+            p.drawString(50, 460, "Company email: {}".format(applicant.user.email))
+            p.drawString(50, 100, "Application Acceptance Date:")
+            p.drawString(50, 80, "{}".format(applicant.created_at.date()))
+
+            p.showPage()
+            p.save()
+
+            buffer.seek(0)
+            return FileResponse(buffer, as_attachment=True, filename='job-invite.pdf')
