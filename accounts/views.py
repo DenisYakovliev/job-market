@@ -205,6 +205,6 @@ class ProfileApplicantsDetailView(View):
         job = Job.objects.get(id=applicant.job.id)
         job.filled = True
         job.last_date = timezone.now()
-        job.price = job.price + int(job.last_date - job.created_at) * 2
+        job.price = job.price + int((job.last_date - job.created_at).days) * 2
         job.save()
         return redirect('profile_jobs_panel_url')
