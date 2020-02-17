@@ -63,23 +63,6 @@
                 <div class="col-lg-3">
                     <h4 class="text-uppercase text-dark" style="font-weight: 600">О <span class="text-info">{{ job.user.company_name }}</span></h4>
                     <p class="py-3" style="font-size: 14px">{{ job.user.about }}</p>
-                    <div class="py-2">
-                        {% if request.user.is_authenticated %}
-                            {% if not request.user.role == 'employer' and not job.filled %}
-                                {% if is_applied %}
-                                    <input type="button" class="btn btn-success" value="Заявка подана" style="font-weight: 600">
-                                {% else %}
-                                    <form action="" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="job" value="{{ job.id }}">
-                                        <input type="submit" class="btn btn-outline-danger btn-sm" value="Подать заявку" style="font-weight: 600">
-                                    </form>
-                                {% endif %}
-                            {% endif %}
-                        {% else %}
-                            <a class="btn btn-outline-danger btn-sm" href="{% url 'login_url' %}">Войти для подачи заявки</a>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
         </div>

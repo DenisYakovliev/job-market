@@ -15,8 +15,8 @@ class UserLoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = None
-        self.fields['email'].widget.attrs.update({'placeholder': 'Введите пароль'})
-        self.fields['password'].widget.attrs.update({'placeholder': 'Введите почту'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'Введите почту'})
+        self.fields['password'].widget.attrs.update({'placeholder': 'Введите пароль'})
 
     def clean(self, *args, **kwargs):
         email = self.cleaned_data.get("email")
@@ -102,7 +102,7 @@ class EmployeeRegisterForm(forms.ModelForm):
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError(
-                self.error_messages['password_mismatch'],
+                self.error_message['password_mismatch'],
                 code='password_mismatch',
             )
         return password2
@@ -182,9 +182,10 @@ class EmployerRegisterForm(forms.ModelForm):
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
+
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError(
-                self.error_messages['password_mismatch'],
+                self.error_message['password_mismatch'],
                 code='password_mismatch',
             )
         return password2
