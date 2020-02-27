@@ -1,6 +1,3 @@
 # job-market
 
-Live demo site::
-    
-    http://denisyakovliev.pythonanywhere.com/
-    
+Site live demo: [Job-Market](http://denisyakovliev.pythonanywhere.com/)    
